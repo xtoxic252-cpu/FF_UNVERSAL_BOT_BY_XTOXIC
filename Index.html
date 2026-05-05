@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>乂 T O X I C ╰︿╯ X-SQUAD</title>
+    <style>
+        :root { --neon: #00ff41; --toxic-red: #ff003c; --bg: #050505; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; padding: 20px; }
+        .header { text-align: center; font-size: 2.5rem; text-shadow: 0 0 15px var(--neon); margin-bottom: 40px; }
+        
+        .squad-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .bot-card { border: 1px solid var(--neon); padding: 20px; background: #0a0a0a; position: relative; transition: 0.3s; }
+        .bot-card:hover { box-shadow: 0 0 20px var(--neon); transform: translateY(-5px); }
+        .bot-card.toxic { border-color: var(--toxic-red); color: var(--toxic-red); }
+        
+        .status-light { height: 10px; width: 10px; border-radius: 50%; background: var(--neon); display: inline-block; margin-right: 10px; box-shadow: 0 0 5px var(--neon); }
+        input { background: #000; border: 1px solid var(--neon); color: var(--neon); width: 100%; margin: 10px 0; padding: 8px; }
+        button { width: 100%; padding: 10px; background: var(--neon); border: none; font-weight: bold; cursor: pointer; }
+        .toxic button { background: var(--toxic-red); color: white; }
+        
+        #console { height: 150px; background: #000; border: 1px solid var(--neon); margin-top: 20px; padding: 10px; overflow-y: scroll; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="header">乂 T O X I C ╰︿╯ X-SQUAD CMD</div>
+
+    <div class="squad-grid">
+        <div class="bot-card">
+            <h3>[01] GLORY_BOT</h3>
+            <p><span class="status-light"></span>Prop: Auto-Push Glory</p>
+            <input type="text" id="glory-uid" placeholder="Target UID">
+            <button onclick="cmd('glory')">ACTIVATE FARMER</button>
+        </div>
+
+        <div class="bot-card">
+            <h3>[02] REMOTE_BOT</h3>
+            <p><span class="status-light"></span>Prop: Emote Spam x5</p>
+            <input type="text" id="remote-uid" placeholder="Target UID">
+            <button onclick="cmd('remote')">START TROLLING</button>
+        </div>
+
+        <div class="bot-card">
+            <h3>[03] DRESS_BOT</h3>
+            <p><span class="status-light"></span>Prop: Golden Sakura Spoof</p>
+            <input type="text" id="t-code" placeholder="Team Code">
+            <button onclick="cmd('dress')">INJECT LOOKS</button>
+        </div>
+
+        <div class="bot-card toxic">
+            <h3>[04] X_TOXIC_BOT</h3>
+            <p><span class="status-light" style="background:var(--toxic-red)"></span>Prop: Multi-IP Master</p>
+            <button onclick="cmd('toxic')">EXECUTE SQUAD SYNC</button>
+        </div>
+    </div>
+
+    <div id="console">> System ready for deployment...</div>
+
+    <script>
+        function cmd(type) {
+            const console = document.getElementById('console');
+            console.innerHTML += `<br>> [INIT] Executing ${type.toUpperCase()} module...`;
+            // Add fetch call to your Python Backend here
+        }
+    </script>
+</body>
+</html>
