@@ -1,49 +1,62 @@
+import os
 import threading
 import time
 import random
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 
-# ---------------------------------------------------------
-# BOT LOGIC MODULES
-# ---------------------------------------------------------
+# --- FIXED: Isse Website aur Railway ke beech ka connection nahi tootega ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-def glory_logic(uid):
+class BotRequest(BaseModel):
+    uid: str = "0"
+    team_code: str = "0"
+
+# --- BOT LOGIC (Independent Threads) ---
+
+def run_glory_bot(uid):
+    print(f"[SHIELD] Glory Bot Active for: {uid}")
     while True:
-        print(f"[FARMER] {uid} earning +5 Glory via Heartbeat...")
         time.sleep(random.randint(30, 60))
 
-def remote_logic(uid):
-    emotes = [101, 102, 105] # Example Emote IDs
+def run_remote_bot(uid):
+    print(f"[TROLL] Remote Bot Spamming on: {uid}")
     while True:
-        print(f"[TROLL] Spamming Emote {random.choice(emotes)} on {uid}")
-        time.sleep(0.4) # Fast Spam
+        time.sleep(0.5)
 
-def dress_logic(team_code):
-    print(f"[SPOOF] Joining Code: {team_code}")
-    print("[SPOOF] Applying Skin ID: 10001 (Golden Sakura)")
-    print("[SPOOF] Visual Level: 100 | V-Badge: Active")
+def run_dress_bot(team_code):
+    print(f"[DRESS] Injecting Sakura/V-Badge in Code: {team_code}")
+    while True:
+        time.sleep(100)
 
-def toxic_logic():
-    print("[MASTER] Rotating 4 Virtual IPs... Synchronizing Squad.")
+# --- API ENDPOINTS ---
 
-# ---------------------------------------------------------
-# API ROUTES
-# ---------------------------------------------------------
+@app.get("/")
+def health_check():
+    return {"status": "乂 T O X I C ╰︿╯ Live"}
 
-@app.get("/execute/{bot_type}")
-def execute_bot(bot_type: str, target: str = ""):
+@app.post("/execute/{bot_type}")
+async def start_bot(bot_type: str, data: BotRequest, bg: BackgroundTasks):
     if bot_type == "glory":
-        threading.Thread(target=glory_logic, args=(target,)).start()
+        bg.add_task(run_glory_bot, data.uid)
     elif bot_type == "remote":
-        threading.Thread(target=remote_logic, args=(target,)).start()
+        bg.add_task(run_remote_bot, data.uid)
     elif bot_type == "dress":
-        dress_logic(target)
-    elif bot_type == "toxic":
-        toxic_logic()
-    return {"status": "deployed", "bot": bot_type}
+        bg.add_task(run_dress_bot, data.team_code)
+    return {"message": f"{bot_type} bot deployed successfully!"}
 
+# --- FIXED: Railway Port Binding ---
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Railway environment se port uthata hai, default 8000
+    port = int(os.environ.get("PORT", 8000))
+    # '0.0.0.0' hona zaroori hai Railway ke liye
+    uvicorn.run(app, host="0.0.0.0", port=port)
